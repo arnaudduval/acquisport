@@ -25,19 +25,17 @@ def run():
     win.addItem(scx_label)
 
     def update():
-        data = snapshot()
+        hr_data = snapshot("hr")
+        power_data = snapshot("power")
 
-        if not data:
-            return
+        if hr_data:
+            x_hr, y_hr = zip(*hr_data)
+            curve_hr.setData(x_hr, y_hr)
+            plot_hr.setXRange(max(0, x_hr[-1] - 60), x_hr[-1])
 
-        x = [s.t for s in data]
-
-        hr = [s.hr if s.hr is not None else 0 for s in data]
-        power = [s.power if s.power is not None else 0 for s in data]
-
-        curve_hr.setData(x, hr)
-        curve_power.setData(x, power)
-        plot_hr.setXRange(max(0, x[-1] - 60), x[-1])
+        if power_data:
+            x_power, y_power = zip(*power_data)
+            curve_power.setData(x_power, y_power)
 
         if scx.scx_value is not None:
             scx_label.setText(f"SCx: {scx.scx_value:.4f}")

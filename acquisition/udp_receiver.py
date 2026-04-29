@@ -2,7 +2,7 @@ import socket
 import json
 
 from core.bus import event_bus
-from core.events import SampleEvent
+from core.events import MetricEvent
 from core.config import UDP_PORT
 from core.timebase import now
 
@@ -15,16 +15,16 @@ def run():
 
     while True:
         data, _ = sock.recvfrom(2048)
-
         msg = json.loads(data.decode())
 
-        event_bus.put(
-            SampleEvent(
-                t=now(),
-                hr=msg.get("hr"),
-                power=msg.get("power"),
-                cadence=msg.get("cadence"),
-                speed=msg.get("speed"),
-                source="udp"
+        t = now()
+
+        for metric, value in msg.items():
+            event_bus.put(
+                MetricEvent(
+                    t=t,
+                    metric=metric,
+                    value=value,
+                    source="udp"
+                )
             )
-        )

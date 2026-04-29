@@ -1,6 +1,6 @@
 import threading
 
-from acquisition.ble_hr import run as run_ble
+from acquisition.manager import start as start_ble
 from acquisition.udp_receiver import run as run_udp
 from acquisition.fake_source import run as run_fake
 
@@ -22,7 +22,8 @@ def main():
     threading.Thread(target=buffer_worker, daemon=True).start()
     # threading.Thread(target=run_ble, daemon=True).start()
     # threading.Thread(target=run_udp, daemon=True).start()
-    threading.Thread(target=run_fake, daemon=True).start()
+    # threading.Thread(target=run_fake, daemon=True).start()
+    start_ble()
     threading.Thread(target=scx_worker, daemon=True).start()
     run_ui()
 
